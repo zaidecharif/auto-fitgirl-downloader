@@ -1,71 +1,230 @@
-# ⚡ GIT FIT — Bulk Downloader ⚡
+<div align="center">
 
-![UI Preview](https://img.shields.io/badge/UI-CustomTkinter-orange?style=for-the-badge) ![Automation](https://img.shields.io/badge/Engine-Selenium-blue?style=for-the-badge) ![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey?style=for-the-badge)
+```
+ ██████╗ ██╗████████╗    ███████╗██╗████████╗
+██╔════╝ ██║╚══██╔══╝    ██╔════╝██║╚══██╔══╝
+██║  ███╗██║   ██║       █████╗  ██║   ██║   
+██║   ██║██║   ██║       ██╔══╝  ██║   ██║   
+╚██████╔╝██║   ██║       ██║     ██║   ██║   
+ ╚═════╝ ╚═╝   ╚═╝       ╚═╝     ╚═╝   ╚═╝  
+```
 
-**GIT FIT** is a high-performance, automated bulk downloader wrapped in a sleek Dark Mode UI. Designed specifically to navigate multi-step redirect sites (like repack hosters), it automates the tedious process of opening links, finding the download buttons, waiting for redirects, and managing the file streams.
+### ⬇ Bulk Downloader — Dark Edition
 
-You can run it instantly as a standalone `.exe` or dive into the `.py` source code to see how it ticks.
+![Python](https://img.shields.io/badge/Python-3.8%2B-red?style=for-the-badge&logo=python&logoColor=white)
+![Selenium](https://img.shields.io/badge/Selenium-Automation-e8401c?style=for-the-badge&logo=selenium&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-black?style=for-the-badge)
+![AI Built](https://img.shields.io/badge/Built%20with-Claude%20AI-orange?style=for-the-badge&logo=anthropic&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge)
 
----
+*Automate bulk downloads from multi-step pages with a sleek dark GUI*
 
-## 🚀 Quick Start (For Users)
-
-Don't want to mess with Python, pip, or dependencies? I've got you covered.
-
-1. Go to the **Releases** tab and download `GIT_FIT.exe`.
-2. Double-click the executable (no installation required).
-3. **Select your Links File:** Feed it a `.txt` or `.csv` file containing one URL per line.
-4. **Select your Output Folder:** Choose where you want the files saved.
-5. Hit **▶ START DOWNLOAD**.
-
-The app will launch an automated Chrome instance, methodically work through your list, and safely handle the downloads. You can monitor the live progress and activity logs right in the app. 
-
-*Note: The first time you run the `.exe`, it may take a few seconds to unpack the runtime environment.*
-
----
-
-## 🛠️ Under the Hood (For Developers)
-
-If you're a Python dev, this script solves several notorious browser automation headaches. Here is how the engine works:
-
-### 1. The Automation Engine (Selenium)
-The core relies on `selenium` and `webdriver-manager`. Instead of headless mode (which often triggers bot-protection blocks), GIT FIT uses a **Persistent Detached Session**:
-* It opens a primary "dummy" tab (Google) to keep the browser instance alive.
-* It spawns a dedicated **Worker Tab** to navigate the URLs.
-* **Smart Element Hunting:** It doesn't rely on a single CSS class. It tries multiple XPATHs and selectors (like `translate()` functions for case-insensitive matching) to hunt down elusive download buttons.
-
-### 2. Memory & Tab Management
-One of the biggest issues with bulk downloading is memory leaks from opening 100+ tabs. 
-* GIT FIT strictly enforces a **2-Tab Maximum**. 
-* Once a file initiates the `.crdownload` or `.part` stream, the script waits for the stream to finish, then instantly destroys the temporary download tab, routing control back to the Worker Tab. 
-
-### 3. Windows Path Normalization (The Tkinter Bug)
-There is a notorious bug where Tkinter UI dialogs return paths with forward slashes (`C:/Downloads`), which causes Chrome's Windows binary to instantly fail downloads. The script utilizes `os.path.normpath()` to forcefully convert all paths to native Windows backslashes before passing them to the webdriver preferences.
-
-### 4. Self-Healing Dependencies
-If you run the `.py` file raw, the script includes a `try/except` bootstrap block. If it detects you are missing `customtkinter` or `Pillow`, it silently invokes `subprocess` to `pip install` them on the fly before launching the UI.
+</div>
 
 ---
 
-## 🤖 AI Co-Authored
+## 🤖 About This Project
 
-This project is a testament to human-AI collaboration. The core architecture, GUI design, and complex debugging (specifically solving Chrome's Safe Browsing detached-session flags and the Tkinter slash-path bug) were developed in partnership with AI. 
+> **This entire project was built with [Claude](https://claude.ai) (Anthropic's AI).** The download engine, GUI design, tab management logic, file detection system, and this README — all generated through an iterative AI-assisted development session. No line of code was written by hand.
 
-By leveraging AI, we were able to rapidly iterate on the Selenium window-handling logic, optimize the UI threading, and squash obscure OS-level bugs that normally take hours to track down.
+This tool automates the tedious process of downloading large batches of files from sites that require multiple button clicks per file (landing page → intermediate page → actual download). Instead of repeating those clicks hundreds of times manually, you give it a list of URLs and walk away.
 
 ---
 
-## ⚙️ How to run from Source
+## ✨ Features
 
-If you want to tweak the code, clone the repo and run:
+| Feature | Description |
+|---|---|
+| 🖥️ **Dark GUI** | Sleek `customtkinter` interface — no terminal required |
+| 📋 **Batch Processing** | Feed it a `.txt` or `.csv` file with hundreds of URLs |
+| 🔍 **Smart Detection** | Detects new files by name diff, not just file count |
+| ⚙️ **Adjustable Timeouts** | Live sliders for every timing parameter |
+| 📊 **Live Progress** | Real-time log, progress bar, and stats panel |
+| 🌐 **Chrome Stays Open** | Browser remains alive after the script finishes |
+| 🛡️ **Error Recovery** | Gracefully handles failed URLs and continues |
+
+---
+
+## 🖼️ How It Looks
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  [Avatar]  ⬇                    Configure & Launch    ● IDLE    │
+│  GIT FIT                                                         │
+│  BULK DOWNLOADER   ┌──────────────────────────────────────────┐ │
+│                    │ LINKS FILE    [path/to/urls.txt] [Browse] │ │
+│  TOTAL LINKS       │──────────────────────────────────────────│ │
+│  0                 │ DOWNLOAD DIR  [C:\Downloads\]    [Browse] │ │
+│                    └──────────────────────────────────────────┘ │
+│  COMPLETED                                                       │
+│  0                 PROGRESS                               0%     │
+│                    ████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  │
+│  FAILED                                                          │
+│  0                 ACTIVITY LOG                         [Clear] │
+│                    [12:34:01] ▶ Found 42 links. Starting...     │
+│  BUTTON TIMEOUT    [12:34:02] [1/42] https://example.com/...   │
+│  ──────●────  20   [12:34:05]   ✔ First button clicked         │
+│                    [12:34:07]   ✔ Switched to new tab           │
+│  NEW TAB WAIT      [12:34:09]   ✔ Second button clicked        │
+│  ──●────────  10   [12:34:12]   ✅ Saved: game.part01.rar      │
+│                                                                  │
+│  DOWNLOAD TIMEOUT            [⏹ STOP]  [▶ START DOWNLOAD]      │
+│  ────────────●  120                                              │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## ⚙️ How It Works
+
+```
+Your URL list
+     │
+     ▼
+┌─────────────┐
+│  Page 1     │  ← Script navigates here, finds & clicks
+│  [DOWNLOAD] │    the first download button
+└──────┬──────┘
+       │  opens new tab
+       ▼
+┌─────────────┐
+│  Page 2     │  ← Switches to new tab, finds & clicks
+│  [DOWNLOAD] │    the second download button
+└──────┬──────┘
+       │  triggers download
+       ▼
+┌─────────────┐
+│  Chrome     │  ← Waits for .crdownload to disappear,
+│  Downloads  │    then diffs folder to find new filename
+└──────┬──────┘
+       │
+       ▼
+  ✅ Saved: filename.rar
+       │
+       └──► Next URL →  repeat
+```
+
+The script uses **Selenium** to drive a real Chrome browser — it clicks exactly what a human would click, which means it bypasses JavaScript-rendered buttons, timers, and redirects that simple HTTP scrapers can't handle.
+
+---
+
+## 📦 Requirements
+
+- **Python 3.8+**
+- **Google Chrome** (must be installed)
+- The following Python packages:
 
 ```bash
-# Clone the repository
-git clone [https://github.com/yourusername/git-fit-downloader.git](https://github.com/yourusername/git-fit-downloader.git)
+pip install selenium webdriver-manager customtkinter Pillow
+```
+
+> `webdriver-manager` automatically downloads the correct ChromeDriver for your Chrome version — no manual setup needed.
+
+---
+
+## 🚀 Installation & Usage
+
+**1. Clone the repo**
+```bash
+git clone https://github.com/YOUR_USERNAME/git-fit-downloader.git
 cd git-fit-downloader
+```
 
-# Run the script (it will auto-install customtkinter and Pillow if missing)
-# You will need to manually install selenium:
-pip install selenium webdriver-manager
+**2. Install dependencies**
+```bash
+pip install selenium webdriver-manager customtkinter Pillow
+```
 
-python git_fit.py
+**3. Run the app**
+```bash
+python downloader_app.py
+```
+
+**4. In the GUI:**
+- Click **Browse** next to `LINKS FILE` → select your `.txt` or `.csv` file
+- Click **Browse** next to `DOWNLOAD DIR` → choose where files should be saved
+- Adjust the sliders if needed (defaults work for most sites)
+- Hit **▶ START DOWNLOAD** and watch the log
+
+---
+
+## 📝 Links File Format
+
+**Plain text** (one URL per line):
+```
+https://example.com/download/file1
+https://example.com/download/file2
+https://example.com/download/file3
+```
+
+**CSV** (must have a `url` column):
+```csv
+url,name
+https://example.com/download/file1,Game Part 1
+https://example.com/download/file2,Game Part 2
+```
+
+Lines starting with `#` are ignored (useful for comments).
+
+---
+
+## 🎛️ Settings Reference
+
+| Slider | Default | Description |
+|---|---|---|
+| **Button Timeout** | 20s | How long to wait for a download button to appear |
+| **New Tab Wait** | 10s | How long to wait for a new tab to open after click |
+| **Download Timeout** | 120s | Max time to wait for a file to finish downloading |
+| **Delay / Link** | 3s | Pause between each URL (be respectful to servers) |
+
+---
+
+## 🏗️ Project Structure
+
+```
+git-fit-downloader/
+│
+├── downloader_app.py     # Main app — GUI + download engine
+└── README.md             # This file
+```
+
+The entire project lives in a single Python file by design — easy to share, easy to run.
+
+---
+
+## ⚠️ Disclaimer
+
+This tool is for **educational and personal use only**. It automates clicks that you would otherwise perform manually in a browser.
+
+- Respect each website's Terms of Service
+- Don't hammer servers — use the delay slider
+- Only download content you have the right to download
+
+---
+
+## 🤝 Contributing
+
+PRs welcome. If a site's button structure changes and the selectors break, open an issue with the URL pattern and I'll update the `find_download_button()` selectors.
+
+---
+
+## 🧠 Built With AI
+
+This project was created through a conversation with **Claude Sonnet** (Anthropic). The development process involved:
+
+- Iterative debugging of Selenium tab management
+- Research into how download sites actually serve files (`window.open()` vs Chrome download manager)
+- UI design in `customtkinter` with embedded assets
+- Root-cause analysis of timing race conditions
+
+> *"The original script works, so the GUI now runs exactly the same code, line by line, inside a thread."* — Claude, during one of many debugging sessions
+
+---
+
+<div align="center">
+
+Made with ❤️ and 🤖 by **Zaid** + **Claude AI**
+
+⭐ Star this repo if it saved you hours of clicking
+
+</div>
