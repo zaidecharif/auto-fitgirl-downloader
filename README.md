@@ -1,55 +1,71 @@
-# 🚀 Auto Downloader Script (Selenium)
+# ⚡ GIT FIT — Bulk Downloader ⚡
 
-![Python](https://img.shields.io/badge/Python-3.x-blue.svg)
-![Selenium](https://img.shields.io/badge/Selenium-WebDriver-green.svg)
-![AI Generated](https://img.shields.io/badge/Code-AI_Generated-purple.svg)
+![UI Preview](https://img.shields.io/badge/UI-CustomTkinter-orange?style=for-the-badge) ![Automation](https://img.shields.io/badge/Engine-Selenium-blue?style=for-the-badge) ![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey?style=for-the-badge)
 
-> **🤖 Note:** This script was generated with the help of AI! It was built to automate the tedious process of clicking through multiple download links, handling pop-ups, and managing browser tabs.
+**GIT FIT** is a high-performance, automated bulk downloader wrapped in a sleek Dark Mode UI. Designed specifically to navigate multi-step redirect sites (like repack hosters), it automates the tedious process of opening links, finding the download buttons, waiting for redirects, and managing the file streams.
 
-This Python script reads a list of URLs from a text file or CSV, opens them in a persistent Google Chrome session, and automatically clicks the necessary buttons to download files. It smartly handles new tabs and waits for your downloads to finish before moving to the next link.
+You can run it instantly as a standalone `.exe` or dive into the `.py` source code to see how it ticks.
 
 ---
 
-## 📋 Prerequisites
+## 🚀 Quick Start (For Users)
 
-Before you can run this script, you need to have a few things set up on your computer:
+Don't want to mess with Python, pip, or dependencies? I've got you covered.
 
-1. **Python:** You must have Python installed. If you don't have it, download it from [python.org](https://www.python.org/downloads/). *(Make sure to check the box that says "Add Python to PATH" during installation).*
-2. **Required Libraries:** You need to install the Selenium and Webdriver Manager packages.
+1. Go to the **Releases** tab and download `GIT_FIT.exe`.
+2. Double-click the executable (no installation required).
+3. **Select your Links File:** Feed it a `.txt` or `.csv` file containing one URL per line.
+4. **Select your Output Folder:** Choose where you want the files saved.
+5. Hit **▶ START DOWNLOAD**.
 
-Open your **Command Prompt (cmd)** or **Terminal** and run this command:
-`pip install selenium webdriver-manager`
+The app will launch an automated Chrome instance, methodically work through your list, and safely handle the downloads. You can monitor the live progress and activity logs right in the app. 
 
----
-
-## ⚙️ Configuration
-
-Before running the script, open the Python file (`auto_downloader_fitgirl.py`) in a text editor and update these two variables at the top of the script to match your computer:
-
-`LINKS_FILE    = r"C:\Users\YourUsername\Documents\urls.txt"`
-`DOWNLOAD_DIR  = r"C:\Users\YourUsername\Downloads\auto_downloads"`
+*Note: The first time you run the `.exe`, it may take a few seconds to unpack the runtime environment.*
 
 ---
 
-## 💻 How to Run the Script
+## 🛠️ Under the Hood (For Developers)
 
-1. Open your **Command Prompt (cmd)** or **Terminal**.
-2. Navigate to the folder where you saved the Python script using the `cd` (change directory) command. For example:
-   `cd C:\Users\ZAID\Documents`
-3. Once you are in the correct folder, run the script with this command:
-   `python auto_downloader_fitgirl.py`
-   *(Note: Make sure your file is named `auto_downloader_fitgirl.py` without spaces. If it has a space, rename it so it uses an underscore!)*
+If you're a Python dev, this script solves several notorious browser automation headaches. Here is how the engine works:
+
+### 1. The Automation Engine (Selenium)
+The core relies on `selenium` and `webdriver-manager`. Instead of headless mode (which often triggers bot-protection blocks), GIT FIT uses a **Persistent Detached Session**:
+* It opens a primary "dummy" tab (Google) to keep the browser instance alive.
+* It spawns a dedicated **Worker Tab** to navigate the URLs.
+* **Smart Element Hunting:** It doesn't rely on a single CSS class. It tries multiple XPATHs and selectors (like `translate()` functions for case-insensitive matching) to hunt down elusive download buttons.
+
+### 2. Memory & Tab Management
+One of the biggest issues with bulk downloading is memory leaks from opening 100+ tabs. 
+* GIT FIT strictly enforces a **2-Tab Maximum**. 
+* Once a file initiates the `.crdownload` or `.part` stream, the script waits for the stream to finish, then instantly destroys the temporary download tab, routing control back to the Worker Tab. 
+
+### 3. Windows Path Normalization (The Tkinter Bug)
+There is a notorious bug where Tkinter UI dialogs return paths with forward slashes (`C:/Downloads`), which causes Chrome's Windows binary to instantly fail downloads. The script utilizes `os.path.normpath()` to forcefully convert all paths to native Windows backslashes before passing them to the webdriver preferences.
+
+### 4. Self-Healing Dependencies
+If you run the `.py` file raw, the script includes a `try/except` bootstrap block. If it detects you are missing `customtkinter` or `Pillow`, it silently invokes `subprocess` to `pip install` them on the fly before launching the UI.
 
 ---
 
-## ✨ Features
+## 🤖 AI Co-Authored
 
-- **Persistent Browser:** Leaves a Google tab open so Chrome doesn't automatically quit when the script finishes.
-- **Two-Click Flow:** Handles sites that require you to click a download button, switch to a new tab, and click a second download button.
-- **Smart Waiting:** Detects `.crdownload` files to know exactly when a download finishes before moving to the next link.
-- **Error Handling:** Automatically cleans up broken tabs if a link fails, ensuring the script keeps running.
+This project is a testament to human-AI collaboration. The core architecture, GUI design, and complex debugging (specifically solving Chrome's Safe Browsing detached-session flags and the Tkinter slash-path bug) were developed in partnership with AI. 
+
+By leveraging AI, we were able to rapidly iterate on the Selenium window-handling logic, optimize the UI threading, and squash obscure OS-level bugs that normally take hours to track down.
 
 ---
 
-## 🤝 Contributing
-Feel free to fork this repository, make changes, and submit pull requests if you want to add new features or improve the script!
+## ⚙️ How to run from Source
+
+If you want to tweak the code, clone the repo and run:
+
+```bash
+# Clone the repository
+git clone [https://github.com/yourusername/git-fit-downloader.git](https://github.com/yourusername/git-fit-downloader.git)
+cd git-fit-downloader
+
+# Run the script (it will auto-install customtkinter and Pillow if missing)
+# You will need to manually install selenium:
+pip install selenium webdriver-manager
+
+python git_fit.py
